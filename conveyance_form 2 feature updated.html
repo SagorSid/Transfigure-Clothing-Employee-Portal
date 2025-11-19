@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Portal - Transfigure Clothing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            animation: gradientShift 15s ease infinite;
+            background-size: 200% 200%;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 20px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .company-name {
+            color: #667eea;
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .company-address {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        #homePage {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .home-title {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 15px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .home-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 50px;
+            animation: fadeIn 1.2s ease-out;
+        }
+
+        .selection-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .selection-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 3px solid #e0e0e0;
+            border-radius: 20px;
+            padding: 40px 30px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            animation: scaleIn 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .selection-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            border-color: #667eea;
+        }
+
+        .selection-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .selection-card:hover::before {
+            left: 100%;
+        }
+
+        .card-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .card-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .employee-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        label .required {
+            color: #e74c3c;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="month"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        input[type="month"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        input[readonly] {
+            background: #f0f0f0;
+            cursor: not-allowed;
+        }
+
+        .trips-section {
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .trips-section h2 {
+            color: #333;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .trips-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .trips-table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .trips-table th {
+            padding: 15px 10px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .trips-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .trips-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .trips-table input {
+            padding: 8px 10px;
+            font-size: 13px;
+            min-width: 120px;
+        }
+
+        .trip-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .total-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .total-section h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .total-amount {
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #218838 0%, #1aa179 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.6);
+        }
+
+        .submit-btn:disabled {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .submit-btn.mobile-bill-btn {
+            background: linear-gradient(135deg, #e91e63 0%, #f06292 100%);
+        }
+
+        .submit-btn.mobile-bill-btn:hover {
+            background: linear-gradient(135deg, #c2185b 0%, #e91e63 100%);
+        }
+
+        .success-message {
+            display: none;
+            background: #d4edda;
+            border: 2px solid #c3e6cb;
+            color: #155724;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            animation: zoomIn 0.6s ease-out;
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .success-message h3 {
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .success-message p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .success-message button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .success-message button:hover {
+            background: #218838;
+            transform: scale(1.05);
+        }
+
+        .employee-name-display {
+            margin-top: 10px;
+            padding: 12px 15px;
+            background: linear-gradient(135deg, #e8f0fe 0%, #f0e7ff 100%);
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .employee-name-display strong {
+            color: #667eea;
+            margin-right: 5px;
+        }
+
+        #displayedName, #billDisplayedName {
+            color: #555;
+            font-weight: 500;
+        }
+
+        #displayedName.confirmed, #billDisplayedName.confirmed {
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        #displayedName.not-confirmed, #billDisplayedName.not-confirmed {
+            color: #999;
+            font-style: italic;
+        }
+
+        small {
+            color: #666;
+            font-size: 12px;
+            display: block;
+            margin-top: 4px;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        input.error {
+            border-color: #e74c3c !important;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .employee-section {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .selection-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .company-name {
+                font-size: 20px;
+            }
+
+            .trips-section {
+                overflow-x: scroll;
+            }
+
+            .trips-table {
+                min-width: 900px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="company-name">🎯 Transfigure Clothing Company</div>
+            <div class="company-address">House- 1/B, Garib-e-Newaz Ave. Sec-11, Uttara, Dhaka</div>
+            <h1>Employee Submission Portal</h1>
+            <p>Submit your weekly conveyance or monthly mobile bill</p>
+        </div>
+
+        <!-- HOME PAGE -->
+        <div id="homePage">
+            <h2 class="home-title">What would you like to submit?</h2>
+            <p class="home-subtitle">Choose an option below to get started</p>
+            
+            <div class="selection-cards">
+                <div class="selection-card" onclick="showConveyanceForm()">
+                    <div class="card-icon">🚗</div>
+                    <div class="card-title">Weekly Conveyance</div>
+                    <div class="card-description">Submit your weekly travel expenses and transportation costs</div>
+                </div>
+                
+                <div class="selection-card" onclick="showMobileBillForm()">
+                    <div class="card-icon">📱</div>
+                    <div class="card-title">Monthly Mobile Bill</div>
+                    <div class="card-description">Submit your monthly mobile phone bill for reimbursement</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONVEYANCE FORM SECTION -->
+        <div id="conveyanceSection" class="form-section">
+            <button class="back-btn" onclick="backToHome()">← Back to Home</button>
+            
+            <form id="conveyanceForm">
+                <div class="employee-section">
+                    <div class="form-group">
+                        <label for="employeeId">Employee ID <span class="required">*</span></label>
+                        <input type="text" id="employeeId" name="employeeId" placeholder="Enter your Employee ID" required pattern="[0-9]+" title="Employee ID must contain only numbers">
+                        <small id="employeeIdError" style="color: #e74c3c; display: none;">Employee ID must be numeric only</small>
+                        <div class="employee-name-display">
+                            <strong>Employee Name:</strong> <span id="displayedName" class="not-confirmed">Not confirmed yet</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="voucherDate">Voucher Date <span class="required">*</span></label>
+                        <input type="date" id="voucherDate" name="voucherDate" required>
+                        <small>Today's date (submission date)</small>
+                    </div>
+                </div>
+
+                <div class="trips-section">
+                    <h2>📋 Weekly Travel Entries</h2>
+                    
+                    <table class="trips-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">No.</th>
+                                <th style="width: 140px;">Date</th>
+                                <th style="width: 200px;">From</th>
+                                <th style="width: 250px;">To</th>
+                                <th style="width: 180px;">Mode of Transport</th>
+                                <th style="width: 120px;">Amount (৳)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tripsTableBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="total-section">
+                    <h3>Total Weekly Amount</h3>
+                    <div class="total-amount">৳ <span id="totalAmount">0.00</span></div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">Submit Weekly Voucher</button>
+            </form>
+
+            <div class="success-message" id="successMessage">
+                <h3>🎉 Your Response Has Been Submitted!</h3>
+                <p>Your weekly conveyance voucher has been successfully recorded and sent for approval.</p>
+                <button onclick="resetConveyanceForm()">Submit Another Voucher</button>
+                <button onclick="backToHome()" style="background: #667eea; margin-left: 10px;">Back to Home</button>
+            </div>
+        </div>
+
+        <!-- MOBILE BILL FORM SECTION -->
+        <div id="mobileBillSection" class="form-section">
+            <button class="back-btn" onclick="backToHome()">← Back to Home</button>
+            
+            <form id="mobileBillForm">
+                <div class="employee-section">
+                    <div class="form-group">
+                        <label for="billEmployeeId">Employee ID <span class="required">*</span></label>
+                        <input type="text" id="billEmployeeId" name="billEmployeeId" placeholder="Enter your Employee ID" required pattern="[0-9]+" title="Employee ID must contain only numbers">
+                        <small id="billEmployeeIdError" style="color: #e74c3c; display: none;">Employee ID must be numeric only</small>
+                        <div class="employee-name-display">
+                            <strong>Employee Name:</strong> <span id="billDisplayedName" class="not-confirmed">Not confirmed yet</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="billMonth">Billing Month/Year <span class="required">*</span></label>
+                        <input type="month" id="billMonth" name="billMonth" required>
+                        <small>Select the month for this bill</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone Number <span class="required">*</span></label>
+                        <input type="text" id="phoneNumber" name="phoneNumber" placeholder="e.g., +88017XXXXXXXX" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="billAmount">Bill Amount (৳) <span class="required">*</span></label>
+                        <input type="number" id="billAmount" name="billAmount" min="0.01" step="0.01" placeholder="e.g., 500.00" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn mobile-bill-btn" id="submitMobileBtn">
+                    Submit Monthly Mobile Bill
+                </button>
+                <p id="billStatusMessage" class="error-message"></p>
+            </form>
+
+            <div class="success-message" id="mobileBillSuccessMessage">
+                <h3>🎉 Mobile Bill Submitted Successfully!</h3>
+                <p>Your monthly mobile bill has been recorded and sent for processing.</p>
+                <button onclick="resetMobileBillForm()">Submit Another Bill</button>
+                <button onclick="backToHome()" style="background: #667eea; margin-left: 10px;">Back to Home</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CRITICAL CONFIGURATION SECTION ---
+        const CONVEYANCE_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzDxB4lrIugwlEAS8eBXrwVvsYv2ThZCcgjDazuUufe9ivvt-yNIxpqk47Bm7lQrV4z/exec';
+        const MOBILE_BILL_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby9mwqtCg_2Gaw74N0GA6n15ABaWVUsa6ca18CYVFYbSUtwFJhpoTBpe91N1TB35kbN/exec';
+        const TODAY = new Date().toISOString().split('T')[0];
+        // ------------------------------------
+
+        // Employee Database
+        const employeeDatabase = {
+            '101': 'EMDADUL HAQUE',
+            '102': 'JOHN DOE',
+            '103': 'JANE SMITH',
+            '104': 'ROBERT JOHNSON',
+            '105': 'SARAH WILLIAMS',
+            '106': 'MICHAEL BROWN',
+            '107': 'EMILY DAVIS',
+            '108': 'DAVID WILSON',
+            '109': 'SOPHIA MARTINEZ',
+            '110': 'JAMES ANDERSON',
+        };
+
+        // Navigation Functions
+        function showConveyanceForm() {
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('mobileBillSection').classList.remove('active');
+            document.getElementById('conveyanceSection').classList.add('active');
+            document.getElementById('voucherDate').value = TODAY;
+            generateTripRows();
+        }
+
+        function showMobileBillForm() {
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('conveyanceSection').classList.remove('active');
+            document.getElementById('mobileBillSection').classList.add('active');
+        }
+
+        function backToHome() {
+            document.getElementById('homePage').style.display = 'block';
+            document.getElementById('conveyanceSection').classList.remove('active');
+            document.getElementById('mobileBillSection').classList.remove('active');
+            
+            document.getElementById('conveyanceForm').reset();
+            document.getElementById('mobileBillForm').reset();
+            document.getElementById('successMessage').classList.remove('show');
+            document.getElementById('mobileBillSuccessMessage').classList.remove('show');
+            
+            // Reset displayed names
+            document.getElementById('displayedName').textContent = 'Not confirmed yet';
+            document.getElementById('displayedName').className = 'not-confirmed';
+            document.getElementById('billDisplayedName').textContent = 'Not confirmed yet';
+            document.getElementById('billDisplayedName').className = 'not-confirmed';
+        }
+
+        // Employee ID Validation - Conveyance Form
+        const employeeIdInput = document.getElementById('employeeId');
+        const displayedName = document.getElementById('displayedName');
+        const employeeIdError = document.getElementById('employeeIdError');
+        
+        employeeIdInput.addEventListener('input', function(e) {
+            const value = e.target.value.trim();
+            
+            if (value && !/^\d+$/.test(value)) {
+                e.target.classList.add('error');
+                employeeIdError.style.display = 'block';
+                displayedName.textContent = 'Invalid Employee ID';
+                displayedName.className = 'not-confirmed';
+            } else {
+                e.target.classList.remove('error');
+                employeeIdError.style.display = 'none';
+                
+                if (value && employeeDatabase[value]) {
+                    displayedName.textContent = employeeDatabase[value];
+                    displayedName.className = 'confirmed';
+                } else if (value) {
+                    displayedName.textContent = 'Employee ID not found';
+                    displayedName.className = 'not-confirmed';
+                } else {
+                    displayedName.textContent = 'Not confirmed yet';
+                    displayedName.className = 'not-confirmed';
+                }
+            }
+        });
+
+        // Employee ID Validation - Mobile Bill Form
+        const billEmployeeIdInput = document.getElementById('billEmployeeId');
+        const billDisplayedName = document.getElementById('billDisplayedName');
+        const billEmployeeIdError = document.getElementById('billEmployeeIdError');
+        
+        billEmployeeIdInput.addEventListener('input', function(e) {
+            const value = e.target.value.trim();
+            
+            if (value && !/^\d+$/.test(value)) {
+                e.target.classList.add('error');
+                billEmployeeIdError.style.display = 'block';
+                billDisplayedName.textContent = 'Invalid Employee ID';
+                billDisplayedName.className = 'not-confirmed';
+            } else {
+                e.target.classList.remove('error');
+                billEmployeeIdError.style.display = 'none';
+                
+                if (value && employeeDatabase[value]) {
+                    billDisplayedName.textContent = employeeDatabase[value];
+                    billDisplayedName.className = 'confirmed';
+                } else if (value) {
+                    billDisplayedName.textContent = 'Employee ID not found';
+                    billDisplayedName.className = 'not-confirmed';
+                } else {
+                    billDisplayedName.textContent = 'Not confirmed yet';
+                    billDisplayedName.className = 'not-confirmed';
+                }
+            }
+        });
+
+        // Generate Trip Rows for Conveyance
+        function generateTripRows() {
+            const tbody = document.getElementById('tripsTableBody');
+            tbody.innerHTML = '';
+            
+            for (let i = 1; i <= 6; i++) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><div class="trip-number">${i}</div></td>
+                    <td><input type="date" name="date-${i}" max="${TODAY}"></td>
+                    <td><input type="text" name="from-${i}" placeholder="e.g., HOME"></td>
+                    <td><input type="text" name="to-${i}" placeholder="e.g., MEEK"></td>
+                    <td><input type="text" name="mode-${i}" placeholder="e.g., Rickshaw"></td>
+                    <td><input type="number" name="amount-${i}" placeholder="0.00" min="0" step="0.01" onchange="calculateTotal()"></td>
+                `;
+                tbody.appendChild(row);
+            }
+        }
+
+        function calculateTotal() {
+            let total = 0;
+            for (let i = 1; i <= 6; i++) {
+                const amountInput = document.querySelector(`input[name="amount-${i}"]`);
+                if (amountInput && amountInput.value) {
+                    total += parseFloat(amountInput.value) || 0;
+                }
+            }
+            document.getElementById('totalAmount').textContent = total.toFixed(2);
+        }
+
+        // Conveyance Form Submission
+        document.getElementById('conveyanceForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const employeeId = document.getElementById('employeeId').value.trim();
+            const displayedNameElement = document.getElementById('displayedName');
+            
+            if (!/^\d+$/.test(employeeId) || displayedNameElement.className !== 'confirmed') {
+                alert('❌ Please enter a valid Employee ID.');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            const employeeName = employeeDatabase[employeeId];
+            const voucherDate = document.getElementById('voucherDate').value;
+            
+            const trips = [];
+            for (let i = 1; i <= 6; i++) {
+                const date = document.querySelector(`input[name="date-${i}"]`).value;
+                const from = document.querySelector(`input[name="from-${i}"]`).value;
+                const to = document.querySelector(`input[name="to-${i}"]`).value;
+                const mode = document.querySelector(`input[name="mode-${i}"]`).value;
+                const amount = document.querySelector(`input[name="amount-${i}"]`).value;
+                
+                if (date || from || to || parseFloat(amount) > 0) {
+                    trips.push({
+                        date: date,
+                        from: from,
+                        to: to,
+                        mode: mode,
+                        amount: amount ? parseFloat(amount) : 0
+                    });
+                }
+            }
+
+            if (trips.length === 0) {
+                alert('❌ Please enter at least one trip.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Weekly Voucher';
+                return;
+            }
+
+            const dataPackage = {
+                employeeId: employeeId,
+                employeeName: employeeName,
+                voucherDate: voucherDate,
+                entries: trips
+            };
+
+            try {
+                const response = await fetch(CONVEYANCE_WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dataPackage),
+                });
+                
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    document.getElementById('conveyanceForm').style.display = 'none';
+                    document.getElementById('successMessage').classList.add('show');
+                } else {
+                    alert('❌ Error: ' + (result.message || 'Submission failed'));
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Weekly Voucher';
+                }
+            } catch (error) {
+                alert('❌ Network error. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Weekly Voucher';
+            }
+        });
+
+        // Mobile Bill Form Submission
+        document.getElementById('mobileBillForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const employeeId = document.getElementById('billEmployeeId').value.trim();
+            const displayedNameElement = document.getElementById('billDisplayedName');
+            
+            if (!/^\d+$/.test(employeeId) || displayedNameElement.className !== 'confirmed') {
+                alert('❌ Please enter a valid Employee ID.');
+                return;
+            }
+
+            const employeeName = employeeDatabase[employeeId];
+            const billMonth = document.getElementById('billMonth').value;
+            const phoneNumber = document.getElementById('phoneNumber').value.trim();
+            const billAmount = document.getElementById('billAmount').value;
+            
+            const submitBtn = document.getElementById('submitMobileBtn');
+            const billStatusMsg = document.getElementById('billStatusMessage');
+
+            if (!billMonth || !phoneNumber || !billAmount) {
+                alert('❌ Please fill in all required fields.');
+                return;
+            }
+
+            const mobileDataPackage = {
+                employeeId: employeeId,
+                employeeName: employeeName,
+                billMonth: billMonth,
+                phoneNumber: phoneNumber,
+                amount: parseFloat(billAmount)
+            };
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            billStatusMsg.textContent = 'Processing...';
+            billStatusMsg.style.color = '#667eea';
+
+            try {
+                const response = await fetch(MOBILE_BILL_WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(mobileDataPackage),
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    document.getElementById('mobileBillForm').style.display = 'none';
+                    document.getElementById('mobileBillSuccessMessage').classList.add('show');
+                } else {
+                    alert('❌ Error: ' + (result.message || 'Submission failed'));
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Monthly Mobile Bill';
+                    billStatusMsg.textContent = '';
+                }
+            } catch (error) {
+                alert('❌ Network error. Please check your connection and try again.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Monthly Mobile Bill';
+                billStatusMsg.textContent = '';
+            }
+        });
+
+        // Reset Functions
+        function resetConveyanceForm() {
+            document.getElementById('conveyanceForm').reset();
+            document.getElementById('conveyanceForm').style.display = 'block';
+            document.getElementById('successMessage').classList.remove('show');
+            document.getElementById('submitBtn').disabled = false;
+            document.getElementById('submitBtn').textContent = 'Submit Weekly Voucher';
+            
+            generateTripRows();
+            calculateTotal();
+            document.getElementById('voucherDate').value = TODAY;
+            document.getElementById('displayedName').textContent = 'Not confirmed yet';
+            document.getElementById('displayedName').className = 'not-confirmed';
+        }
+
+        function resetMobileBillForm() {
+            document.getElementById('mobileBillForm').reset();
+            document.getElementById('mobileBillForm').style.display = 'block';
+            document.getElementById('mobileBillSuccessMessage').classList.remove('show');
+            document.getElementById('submitMobileBtn').disabled = false;
+            document.getElementById('submitMobileBtn').textContent = 'Submit Monthly Mobile Bill';
+            document.getElementById('billStatusMessage').textContent = '';
+            
+            document.getElementById('billDisplayedName').textContent = 'Not confirmed yet';
+            document.getElementById('billDisplayedName').className = 'not-confirmed';
+        }
+    </script>
+</body>
+</html
